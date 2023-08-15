@@ -14,21 +14,38 @@ const Booking = require("./models/Booking");
 const multer = require("multer");
 const fs = require("fs");
 const { log } = require("console");
-const port=process.env.PORT || 4000
+const port = process.env.PORT || 4000;
 require("dotenv").config();
 app.use(express.json());
-app.use(
-  cors({
-    credentials: true,
-    origin: "*",
-  })
-);
+
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://book-your-place-azure.vercel.app",
+      // Add more allowed origins here if needed
+    ];
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+// Use the CORS policy
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(process.env.MONGOURL).then(() => {
-  console.log("Connected to db");
-}).catch(err=>console.log("error:",err))
+mongoose
+  .connect(process.env.MONGOURL)
+  .then(() => {
+    console.log("Connected to db");
+  })
+  .catch((err) => console.log("error:", err));
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
