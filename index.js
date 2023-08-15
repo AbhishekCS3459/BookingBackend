@@ -18,25 +18,13 @@ const port = process.env.PORT || 4000;
 require("dotenv").config();
 app.use(express.json());
 
-const corsOptions = {
-  credentials: true,
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://book-your-place-azure.vercel.app",
-      // Add more allowed origins here if needed
-    ];
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
-// Use the CORS policy
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+app.use(cors({ origin: ["https://book-your-place-azure.vercel.app"], credentials: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
@@ -113,6 +101,8 @@ app.get("/profile", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
+  res.end();
+  // end the response so that no other middleware is called after this one!
 });
 
 app.post("/upload-by-link", async (req, res) => {
