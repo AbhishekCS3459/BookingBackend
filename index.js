@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const cors=require('cors')
+const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(8);
 const cookieParser = require("cookie-parser");
@@ -34,9 +34,9 @@ const corsOptions = {
     }
   },
 };
-// // Use the CORS policy
-app.use(corsOptions);
 
+// Use the CORS policy
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
@@ -113,6 +113,8 @@ app.get("/profile", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
+  res.end();
+  // end the response so that no other middleware is called after this one!
 });
 
 app.post("/upload-by-link", async (req, res) => {
