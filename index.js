@@ -31,6 +31,7 @@ const corsOptions = {
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error("Blocked origin:", origin); // Log the blocked origin
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -39,6 +40,7 @@ const corsOptions = {
 
 // Use the CORS policy
 app.use(cors(corsOptions));
+
 
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
