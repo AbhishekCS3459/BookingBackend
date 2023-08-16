@@ -18,25 +18,17 @@ const port = process.env.PORT || 4000;
 require("dotenv").config();
 app.use(express.json());
 
-const corsOptions = {
-  credentials: true,
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://book-your-place-azure.vercel.app",
-      // Add more allowed origins here if needed
-    ];
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
-// Use the CORS policy
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: ["https://book-your-place-azure.vercel.app","http://localhost:5173"],
+    credentials: true
+    , //access control allow headers
+    optionsSuccessStatus: 200
+    ,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+  })
+  
+);
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
