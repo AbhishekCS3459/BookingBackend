@@ -20,15 +20,13 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://book-your-place-azure.vercel.app","http://localhost:5173"],
-    credentials: true
-    , //access control allow headers
-    optionsSuccessStatus: 200
-    ,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+    origin: ["http://localhost", "https://book-your-place-azure.vercel.app"],
+    credentials: true,
+    optionsSuccessStatus: 200,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
-  
 );
+
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
